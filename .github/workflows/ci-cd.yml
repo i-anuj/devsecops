@@ -116,19 +116,15 @@ jobs:
       
       - name: Update Kubernetes deployment file
         env:
-          IMAGE_TAG: sha-${{ github.sha }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          REGISTRY: ghcr.io
+           IMAGE_TAG: sha-${{ github.sha }}
+           DOCKER_REPO: hacked01/app12
         run: |
-          
-          REPO_NAME=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+     
+         NEW_IMAGE="${DOCKER_REPO}:${IMAGE_TAG}"
+         sed -i "s|image: .*|image: ${NEW_IMAGE}|g" kubernetes/deployment.yaml
+         echo "Updated deployment to use image: ${NEW_IMAGE}"
+         grep -A 1 "image:" kubernetes/deployment.yaml
 
-          NEW_IMAGE="${REGISTRY}/${REPO_NAME}:${IMAGE_TAG}"
-          sed -i "s|image: ${REGISTRY}/.*|image: ${NEW_IMAGE}|g" kubernetes/deployment.yaml
-          
-          
-          echo "Updated deployment to use image: ${NEW_IMAGE}"
-          grep -A 1 "image:" kubernetes/deployment.yaml
       
       - name: Commit and push changes
         run: |
