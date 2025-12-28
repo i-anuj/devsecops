@@ -116,7 +116,7 @@ jobs:
       
       - name: Update Kubernetes deployment file
         env:
-           IMAGE_TAG: sha-${{ github.sha }}
+           IMAGE_TAG: ${{ github.sha }}
            DOCKER_REPO: hacked01/app12
         run: |
      
